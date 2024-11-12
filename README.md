@@ -1,16 +1,11 @@
 # formmd
 
-A new Flutter project.
+A Simple Date Calculator
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+This Project made for my friend whom is serving in military and he is needed for his job on that site
+its simple take 2 date and calculate the Distance beetween them
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Made By ❤️ Aref Mousavi
