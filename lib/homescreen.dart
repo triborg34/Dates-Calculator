@@ -1,16 +1,22 @@
+
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:formmd/controller.dart';
 import 'package:get/get.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
 
+  
+ 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Container(
+      body:GetBuilder<mainController>(builder: (controller) {
+        return Container(
         height: Get.height,
         width: Get.width,
         child: Center(
@@ -21,6 +27,8 @@ class HomeScreen extends StatelessWidget {
             decoration: BoxDecoration(
                 border: Border.all(
                   color: maincolor,
+                  width: 2.0,
+                  strokeAlign: 3.0
                 ),
                 borderRadius: BorderRadius.circular(25)),
             child: Column(
@@ -43,12 +51,14 @@ class HomeScreen extends StatelessWidget {
                                 builder: (context, child) {
 
                                   return Theme(
-                                      data: ThemeData.light(), child: child!);
+                                      data: ThemeData(fontFamily: 'yekan'), child: child!);
                                 },
                               );
-                              Get.find<mainController>().firstDate=picked;
+                            
+                              controller.firstDate=picked;
+                              controller.update();
                             },
-                            child: Text("از تاریخ"))),
+                            child: Text(controller.firstDate!=null ?"${controller.firstDate.year}/${controller.firstDate.month}/${controller.firstDate.day}":"از تاریخ",style: TextStyle(fontWeight: FontWeight.w700),))),
                     
                     SizedBox(
                       width: 15,
@@ -70,15 +80,16 @@ class HomeScreen extends StatelessWidget {
                                 builder: (context, child) {
 
                                   return Theme(
-                                      data: ThemeData.light(), child: child!);
+                                      data: ThemeData(fontFamily: 'yekan'), child: child!);
                                 },
                               );
                               
-                              Get.find<mainController>().lastDate=picked;
+                              controller.lastDate=picked;
+                              controller.update();
 
 
 
-                            }, child: Text("تا تاریخ"))),
+                            }, child: Text(controller.lastDate!=null?"${controller.lastDate.year}/${controller.lastDate.month}/${controller.lastDate.day}":"تا تاریخ",style: TextStyle(fontWeight: FontWeight.w700),))),
                   ],
                 ),
                 SizedBox(
@@ -89,30 +100,53 @@ class HomeScreen extends StatelessWidget {
                     Expanded(
                         child: ElevatedButton(
                             onPressed: ()async {
-                            await  getCacilate(Get.find<mainController>().firstDate,Get.find<mainController>().lastDate);
-                            }, child: Text("ثبت"))),
+                             List res=await getCacilate(controller.firstDate,controller.lastDate);
+                             controller.days=res[0];
+                             controller.months=res[1];
+                             controller.monthsDay=res[2];
+                             controller.weeks=res[3];
+                             controller.weeksday=res[4];
+                             controller.year=res[5];
+                             controller.update();
+                            }, child: Text("ثبت",style: TextStyle(fontWeight: FontWeight.w700),))),
                   ],
                 ),
                 SizedBox(
                   height: 15,
                 ),
-                displayWidget(),
+                Visibility(
+                  visible:controller.days!=0,
+                 
+                  child: Column(
+                    children: [
+                      displayWidget(data: "معادل ${controller.days} روز",),
+                     SizedBox(
+                    height: 15,
+                  ), 
+                  displayWidget(data: "معادل ${controller.months} ماه و ${controller.monthsDay} روز",),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  displayWidget(data: "معادل ${controller.weeks} هفته و ${controller.weeksday} روز"),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  displayWidget(data: "معادل ${controller.year} سال و ${controller.yearsMonth} ماه و ${controller.monthsDay} روز"),
+                    ],
+                  ),
+                ),
                 SizedBox(
                   height: 15,
                 ),
-                displayWidget(),
-                SizedBox(
-                  height: 15,
-                ),
-                displayWidget(),
-                SizedBox(
-                  height: 15,
-                )
+Spacer(),
+Text("Made By ❤️ By Aref Mousavi",style: TextStyle(color: Colors.deepPurple,fontWeight: FontWeight.w500),)
+               
               ],
             ),
           ),
         ),
-      ),
+      );
+      },) 
     );
   }
    getCacilate(var date1,var date2){
@@ -122,28 +156,31 @@ class HomeScreen extends StatelessWidget {
 
       // استخراج مقادیر روز، ساعت، دقیقه و ثانیه
       int days = diff.inDays;
+      
   // محاسبه تعداد ماه‌ها و سال‌ها (به‌صورت شمسی)
       int years = days ~/ 365; // تقریباً
      int remainingDays = days % 365;
-     int months = remainingDays ~/ 30; // تقریباً
+     int months = (remainingDays ~/ 30)+(years*12); // تقریباً
+     int remainingmonth=remainingDays ~/ 30;
 ////////////////////////////////////
 /// 
   int weeks = days ~/ 7;
   int remainingDaysWeek = days % 7;
+  return [days,months,remainingDays,weeks,remainingDaysWeek,years,remainingmonth];
    }
+   
 }
 
 class displayWidget extends StatelessWidget {
-  const displayWidget({
-    super.key,
-  });
+  late String data;
+  displayWidget({required this.data});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(12.0),
       child: Text(
-        "معادل روز",
+        data,
         style: TextStyle(
             color: Colors.deepPurple,
             fontWeight: FontWeight.w900,

@@ -7,7 +7,7 @@ import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await DesktopWindow.setWindowSize(Size(600, 600));
+  await DesktopWindow.setWindowSize(Size(600, 600),animate: true);
   runApp( MyApp());
 }
 
