@@ -1,4 +1,4 @@
-import 'package:formmd/controller.dart';
+import 'package:Dates.Calculator/controller.dart';
 import 'package:get/get.dart';
 
 class Mybinding extends Bindings{

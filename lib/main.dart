@@ -1,6 +1,7 @@
+import 'package:Dates.Calculator/bindigs.dart';
+import 'package:Dates.Calculator/homescreen.dart';
 import 'package:flutter/material.dart';
-import 'package:formmd/bindigs.dart';
-import 'package:formmd/homescreen.dart';
+
 import 'package:get/get.dart';
 import 'package:desktop_window/desktop_window.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
