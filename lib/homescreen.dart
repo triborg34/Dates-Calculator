@@ -139,7 +139,9 @@ class HomeScreen extends StatelessWidget {
                   height: 15,
                 ),
 Spacer(),
-Text("Made By ❤️ By Aref Mousavi",style: TextStyle(color: Colors.deepPurple,fontWeight: FontWeight.w500),)
+GestureDetector(onLongPress: () {
+  Get.snackbar("Its made By Aref Mousavi ", "My Friend Need Vacation So i named to him");
+},child: Text("Made By Mohamad Taheri",style: TextStyle(color: Colors.deepPurple,fontWeight: FontWeight.w500),))
                
               ],
             ),
