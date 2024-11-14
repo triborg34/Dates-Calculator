@@ -38,6 +38,7 @@ dependencies:
   get: ^4.6.6
   persian_datetime_picker: ^3.0.2
   desktop_window: ^0.4.2
+  flutter_launcher_icons: ^0.14.1
 
 dev_dependencies:
   flutter_test:

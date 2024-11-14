@@ -5,10 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:Dates.Calculator/controller.dart';
 import 'package:get/get.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
+import 'dart:math';
 
 class HomeScreen extends StatelessWidget {
 
-  
+  int tab=1;
  
   @override
   Widget build(BuildContext context) {
@@ -100,14 +101,18 @@ class HomeScreen extends StatelessWidget {
                     Expanded(
                         child: ElevatedButton(
                             onPressed: ()async {
-                             List res=await getCacilate(controller.firstDate,controller.lastDate);
-                             controller.days=res[0];
-                             controller.months=res[1];
-                             controller.monthsDay=res[2];
-                             controller.weeks=res[3];
-                             controller.weeksday=res[4];
-                             controller.year=res[5];
+                             List res=await getCalc(controller.lastDate.toDateTime(),controller.firstDate.toDateTime());
+                             
+                             controller.totaldays=res[0];
+                             controller.years=res[1];
+                             controller.months=res[2];
+                             controller.days=res[3];
+                             controller.totalMonths=res[4];
+                             controller.weeks=res[5];
+                             controller.remainingDays=res[6];
                              controller.update();
+                             //[totalDays,years,months,days,totalMonths,weeks,remainingDays];
+                             
                             }, child: Text("ثبت",style: TextStyle(fontWeight: FontWeight.w700),))),
                   ],
                 ),
@@ -119,28 +124,33 @@ class HomeScreen extends StatelessWidget {
                  
                   child: Column(
                     children: [
-                      displayWidget(data: "معادل ${controller.days} روز",),
+                      displayWidget(data: "معادل ${controller.totaldays} روز",),
                      SizedBox(
                     height: 15,
                   ), 
-                  displayWidget(data: "معادل ${controller.months} ماه و ${controller.monthsDay} روز",),
+                  displayWidget(data: "معادل ${controller.totalMonths} ماه و ${controller.days} روز",),
                   SizedBox(
                     height: 15,
                   ),
-                  displayWidget(data: "معادل ${controller.weeks} هفته و ${controller.weeksday} روز"),
+                  displayWidget(data: "معادل ${controller.weeks} هفته و ${controller.remainingDays} روز"),
                   SizedBox(
                     height: 15,
                   ),
-                  displayWidget(data: "معادل ${controller.year} سال و ${controller.yearsMonth} ماه و ${controller.monthsDay} روز"),
+                  displayWidget(data: "معادل ${controller.years} سال و ${controller.months} ماه و ${controller.days} روز"),
                     ],
+           
                   ),
                 ),
                 SizedBox(
                   height: 15,
                 ),
 Spacer(),
-GestureDetector(onLongPress: () {
-  Get.snackbar("Its made By Aref Mousavi ", "My Friend Need Vacation So i named to him");
+GestureDetector(onTap: () {
+  
+  if(tab==5){
+   Get.snackbar("Its made By Aref Mousavi ", "My Friend Need Vacation So i named to him");
+   tab=1;
+  }else{tab++;}
 },child: Text("Made By Mohamad Taheri",style: TextStyle(color: Colors.deepPurple,fontWeight: FontWeight.w500),))
                
               ],
@@ -151,27 +161,47 @@ GestureDetector(onLongPress: () {
       },) 
     );
   }
-   getCacilate(var date1,var date2){
-      DateTime gDate1 = date1.toDateTime();
-      DateTime gDate2 = date2.toDateTime();
-       Duration diff = gDate2.difference(gDate1);
-
-      // استخراج مقادیر روز، ساعت، دقیقه و ثانیه
-      int days = diff.inDays;
-      
-  // محاسبه تعداد ماه‌ها و سال‌ها (به‌صورت شمسی)
-      int years = days ~/ 365; // تقریباً
-     int remainingDays = days % 365;
-     int months = (remainingDays ~/ 30)+(years*12); // تقریباً
-     int remainingmonth=remainingDays ~/ 30;
-////////////////////////////////////
-/// 
-  int weeks = days ~/ 7;
-  int remainingDaysWeek = days % 7;
-  return [days,months,remainingDays,weeks,remainingDaysWeek,years,remainingmonth];
-   }
    
 }
+
+
+
+getCalc(DateTime endDate,DateTime startDate){
+
+  int totalDays = (endDate.difference(startDate).inDays)+1;
+
+  // Calculate the number of years, months, and remaining days
+  int years = endDate.year - startDate.year;
+  int months = endDate.month - startDate.month;
+  int days = endDate.day - startDate.day;
+
+  // Adjust months and years if needed
+  if (days < 0) {
+    months -= 1;
+    days += DateTime(endDate.year, endDate.month, 0).day;
+  }
+  if (months < 0) {
+    years -= 1;
+    months += 12;
+  }
+
+  // Calculate total months
+  int totalMonths = years * 12 + months;
+
+  // Calculate weeks and remaining days
+  int weeks = totalDays ~/ 7;
+  int remainingDays = totalDays % 7;
+
+  // Print results
+  print('It is $totalDays days from the start date to the end date, but not including the end date.');
+  print('Or $years years, $months months, $days days excluding the end date.');
+  print('Or $totalMonths months, $days days excluding the end date.');
+  print('Or $weeks weeks and $remainingDays days.');
+  return [totalDays,years,months,days,totalMonths,weeks,remainingDays];
+}
+
+
+
 
 class displayWidget extends StatelessWidget {
   late String data;
