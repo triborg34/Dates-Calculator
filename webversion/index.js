@@ -64,6 +64,3 @@ calculateButton.addEventListener('click', () => {
   `;
 });
 
-author.addEventListener('click', () => {
-  alert("This app is made by Mohamad Taheri");
-});
